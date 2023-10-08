@@ -1,6 +1,5 @@
 package com.me.snakeassigmnet;
 
-import javafx.animation.AnimationTimer;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -8,10 +7,6 @@ import javafx.scene.layout.VBox;
 public class SnakeGame extends Pane {
 
     public static final int SCALE = 16;
-    private World world;
-    private AnimationTimer gameLoop;
-    private Label scoreText;
-    private Label runningText;
 
     public SnakeGame(World world) {
         setPrefSize(world.getSize() * SCALE, world.getSize() * SCALE);

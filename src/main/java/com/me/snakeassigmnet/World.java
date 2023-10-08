@@ -1,9 +1,12 @@
 package com.me.snakeassigmnet;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.util.Duration;
 
 import java.util.Random;
 
@@ -21,6 +24,7 @@ public class World {
     private final BooleanProperty running = new SimpleBooleanProperty(false);
 
     private final IntegerProperty score = new SimpleIntegerProperty(0);
+    private Timeline gameTimeline;
 
     public World(int size) {
         this.size = size;
@@ -29,8 +33,40 @@ public class World {
         food = new Food();
 
         // TODO: Implement timeline
+        initializeTimeline();
 
         moveFoodRandomly();
+    }
+
+    private void initializeTimeline() {
+        gameTimeline = new Timeline(
+                new KeyFrame(Duration.millis(DELAY), e -> gameUpdate())
+        );
+        gameTimeline.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    private void gameUpdate() {
+        if (isRunning()) {
+            snake.move();
+            checkCollisions();
+        }
+    }
+
+    private void checkCollisions() {
+        if (snake.isAt(food.getX(), food.getY())) {
+            snake.grow();
+            setScore(getScore() + 10);
+            moveFoodRandomly();
+        }
+
+
+        if (snake.collidesWithItself() || !isInBounds(snake.getHeadX(), snake.getHeadY())) {
+            endGame();
+        }
+    }
+
+    private boolean isInBounds(int x, int y){
+        return x>=0 && x < size && y>=0 && y<size;
     }
 
     public void moveFoodRandomly() {

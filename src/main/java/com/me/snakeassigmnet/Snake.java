@@ -13,20 +13,40 @@ public class Snake extends Segment{
 
     private final World world;
 
-    private final List<Segment> body = new LinkedList<>();
+    private final LinkedList<Segment> body = new LinkedList<>();
 
     private final List<SnakeSegmentListener> listeners = new LinkedList<>();
 
     public Snake(int x, int y, World world) {
         super(x, y);
+        body.addFirst(new Segment(x,y));
         this.world = world;
+    }
+
+    public int getHeadX() {
+        return body.getFirst().getX();
+    }
+
+
+    public int getHeadY() {
+        return body.getFirst().getY();
     }
 
     public void move() {
         int newX = getX() + direction.getDX();
         int newY = getY() + direction.getDY();
 
-        // TODO: Implement movement
+        Segment newHead = new Segment(getHeadX() + direction.getDX(), getHeadY() + direction.getDY());
+
+        body.addFirst(newHead);
+
+        if (!(newHead.getX() == world.getFood().getX() && newHead.getY() == world.getFood().getY())) {
+            body.removeLast();
+        }
+    }
+
+    public void grow() {
+
     }
 
     public void addListener(SnakeSegmentListener listener) {
@@ -44,6 +64,16 @@ public class Snake extends Segment{
             }
         }
 
+        return false;
+    }
+
+    public boolean collidesWithItself() {
+        Segment head = body.getFirst();
+        for (Segment segment : body) {
+            if (segment != head && segment.getX() == head.getX() && segment.getY() == head.getY()) {
+                return true;
+            }
+        }
         return false;
     }
 
