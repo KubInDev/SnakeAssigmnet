@@ -27,6 +27,14 @@ public class Snake extends Segment{
         return body.getFirst().getX();
     }
 
+    public int getLastX(){
+        return body.getLast().getX();
+    }
+
+    public int getLastY(){
+        return body.getLast().getY();
+    }
+
 
     public int getHeadY() {
         return body.getFirst().getY();
@@ -35,7 +43,6 @@ public class Snake extends Segment{
     public void move() {
         int newX = getX() + direction.getDX();
         int newY = getY() + direction.getDY();
-
         Segment newHead = new Segment(getHeadX() + direction.getDX(), getHeadY() + direction.getDY());
 
         body.addFirst(newHead);
@@ -46,7 +53,8 @@ public class Snake extends Segment{
     }
 
     public void grow() {
-
+        Segment cell = new Segment(getLastX() - direction.getDX(), getLastY()- direction.getDY());
+        body.add(cell);
     }
 
     public void addListener(SnakeSegmentListener listener) {
